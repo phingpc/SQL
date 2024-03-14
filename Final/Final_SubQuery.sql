@@ -32,8 +32,18 @@ join prodtbl on orderdetail.prodNo = prodtbl.prodNo;
 select * from emptbl;
 
 #Test
-select orderdetail.orderNo,orderdetail.orderQty , (orderdetail.orderQty*prodtbl.prodPrice) ,emptbl.empName from orderdetail ,prodtbl ,emptbl,ordertbl
-where orderdetail.prodNo = prodtbl.prodNo and emptbl.emp = ordertbl.empNo and ordertbl.orderNo = orderdetail.orderNo;
+#select orderdetail.orderNo,orderdetail.orderQty , (orderdetail.orderQty*prodtbl.prodPrice) ,emptbl.empName from orderdetail ,prodtbl ,emptbl,ordertbl
+#where orderdetail.prodNo = prodtbl.prodNo and emptbl.emp = ordertbl.empNo and ordertbl.orderNo = orderdetail.orderNo;
 
 
 
+SELECT orderdetail.orderNo, orderdetail.orderQty, emptbl.empName
+FROM orderdetail
+JOIN prodtbl ON orderdetail.prodNo = prodtbl.prodNo
+JOIN ordertbl ON ordertbl.orderNo = orderdetail.orderNo
+JOIN emptbl ON emptbl.emp = ordertbl.empNo
+WHERE orderdetail.orderQty * prodtbl.prodPrice > (
+    SELECT AVG(orderdetail.orderQty * prodtbl.prodPrice)
+    FROM orderdetail
+    JOIN prodtbl ON orderdetail.prodNo = prodtbl.prodNo
+);
